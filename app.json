@@ -5,6 +5,6 @@
   "logo": "https://node-js-sample.herokuapp.com/node.svg",
   "keywords": ["node", "express", "static"],
   "env": {
-    "buildpacks": "https://github.com/ddollar/heroku-buildpack-multi.git"
+    "BUILDPACK_URL": "https://github.com/ddollar/heroku-buildpack-multi.git"
   }
 }
