@@ -8,7 +8,7 @@
   
   "env": {
     "BUILDPACK_URL": "https://github.com/ddollar/heroku-buildpack-multi.git",
-	"HEROKU_TOOLBELT_API_EMAIL": "@gmail.com",
+	"HEROKU_TOOLBELT_API_EMAIL": "",
 	"HEROKU_TOOLBELT_API_PASSWORD": ""
   },
   
