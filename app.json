@@ -6,8 +6,8 @@
   "keywords": ["node", "express", "static"],
   
   
-  
   "env": {
+    "BUILDPACK_URL": "https://github.com/ddollar/heroku-buildpack-multi.git",
 	"HEROKU_TOOLBELT_API_EMAIL": "",
 	"HEROKU_TOOLBELT_API_PASSWORD": {
 		"description": "This gets generated",
@@ -17,18 +17,6 @@
   
   "addons": [
     "scheduler"
-  ],
-  
-  "buildpacks": [
-    {
-      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
-    },
-	{
-      "url": "https://github.com/heroku/heroku-buildpack-php"
-    },
-	{
-      "url": "https://github.com/invokers123/heroku-buildpack-toolbelt"
-    }
   ]
   
 }
