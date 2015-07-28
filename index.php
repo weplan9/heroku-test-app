@@ -1,9 +1,11 @@
 <?php
 
-echo '<pre>';
-print_r($_ENV);
-echo '</pre>';
-die;
+//Make sure call is from couldflare!
+if(!isset($_SERVER['HTTP_CF_RAY'])){
+	echo 'Resource cannot be displayed!';
+	exit();
+}
+
 
 
 define('DS', DIRECTORY_SEPARATOR);
@@ -20,32 +22,13 @@ function make_token($offset, $string){
 }
 
 
-function matchToken($token, $streamUrl){
+function matchToken($token, $string){
 	if(
-		$token == make_token(0, base64UrlDecode($streamUrl)) 
+		$token == make_token(0, $string)
 		||
-		$token == make_token(1, base64UrlDecode($streamUrl))
+		$token == make_token(1, $string)
 		||
-		$token == make_token(-1, base64UrlDecode($streamUrl))
-		
-	){
-		return true;
-	}else{
-		header('HTTP/1.0 403 Forbidden t');
-		//$printJson['error'] = true;
-		//$printJson['msg'] = 'Token already expired';
-		//echo json_encode($printJson);
-		exit();
-	}
-}
-
-function matchTokenQuickView($token, $videoId){
-	if(
-		$token == make_token(0, $videoId)
-		||
-		$token == make_token(1, $videoId)
-		||
-		$token == make_token(-1, $videoId)
+		$token == make_token(-1, $string)
 		
 	){
 		return true;
@@ -58,18 +41,6 @@ function matchTokenQuickView($token, $videoId){
 	}
 }
 
-function onlyAuthorizedCalls(){	//only authorized remote can make this call
-
-	$allowedIps = array('182.180.148.53');
-
-	if(in_array($_SERVER['HTTP_X_FORWARDED_FOR'], $allowedIps)){
-		return true;
-	}
-	
-	header('HTTP/1.0 403 Forbidden ac');
-	exit();
-	
-}
 
 
 
@@ -105,78 +76,21 @@ function base64UrlDecode($base64){
 }
 
 
-chekYtpakServer(); //first check if the server is ytpak.com not heroku apps domain
+chekYtpakServer(); //first check if the server is ytpak.com
 
 //first of all check if the task is there.
 if(isset($_GET['task'])){
 	$task = $_GET['task'];
 }else{
-	onlyAuthorizedCalls();
-	header('Content-type: application/json');
-	$printJson['error'] = true;
-	$printJson['msg'] = 'Task is missing';
-	echo json_encode($printJson);
+	header('HTTP/1.0 403 Forbidden no ta');
 	exit();
 }
-
-
 
 
 if($task == 'healthcheck'){
 	echo 'ok';
 	exit();
 }
-
-
-
-if($task == 'quickvideoview'){	//this is public task
-	//only allow onlyAuthorizedDomains to access this task
-	onlyAuthorizedDomains();
-	
-	header('Content-type: application/json');
-	
-	if(isset($_GET['token'])){
-		$token = $_GET['token'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'token is required in quickvideoview task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	if(isset($_GET['videoid'])){
-		$videoId = $_GET['videoid'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'videoid is required in quickvideoview task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	matchTokenQuickView($token, $videoId);
-	
-	if(strpos($_SERVER['HTTP_REFERER'], 'local-bc.ytpak.com') !== FALSE){
-		header("Access-Control-Allow-Origin: http://local-bc.ytpak.com");
-		
-	}elseif(strpos($_SERVER['HTTP_REFERER'], 'local-bc.ytbits.com') !== FALSE){
-		header("Access-Control-Allow-Origin: http://local-bc.ytbits.com");
-		
-	}elseif(strpos($_SERVER['HTTP_REFERER'], 'ytbits.com') !== FALSE){
-		header("Access-Control-Allow-Origin: http://www.ytbits.com");
-		
-	}else{
-		header("Access-Control-Allow-Origin: http://www.ytpak.com");
-	}
-	
-	//load the mainClass.php
-	require_once('mainClass.php');
-	$yt = new yt;
-	$yt->quickVideoView($videoId);
-}
-
-
-
-
 
 
 
@@ -210,7 +124,7 @@ if($task == 'convertmp3'){	//this is public task
 		$fileName = '';
 	}
 	
-	matchTokenQuickView($token, $streamUrl.$fileName);
+	matchToken($token, $streamUrl.$fileName);
 	
 	//load the mainClass.php
 	require_once('mainClass.php');
@@ -219,258 +133,6 @@ if($task == 'convertmp3'){	//this is public task
 }
 
 
-
-
-
-if($task == 'playsecurestreamthree'){	//this is public task
-
-	if(isset($_GET['token'])){
-		$token = $_GET['token'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'token is required in playSecureStream task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	if(isset($_GET['streamurlone'])){
-		$streamUrlOne = $_GET['streamurlone'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'streamurlone is required in playsecurestreamtwo task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	if(isset($_GET['streamurltwo'])){
-		$streamUrlTwo = $_GET['streamurltwo'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'streamurltwo is required in playsecurestreamtwo task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	if(isset($_GET['id'])){
-		$videoId = $_GET['id'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'id is required in playsecurestreamtwo task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	
-	if(isset($_GET['videosize'])){
-		$videoSize = $_GET['videosize'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'videosize is required in playSecureStream task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	
-	matchTokenQuickView($token, $videoSize.$videoId);	//in this task token is matched with videosize and videoId
-	
-	
-	//load the mainClass.php
-	require_once('mainClass.php');
-	$yt = new yt;
-	$playSecureStreamTwo = $yt->playSecureStreamThree($videoId, $streamUrlOne, $streamUrlTwo);	//if successful script will not come out of it.
-	exit();
-}
-
-
-
-
-
-if($task == 'playsecurestreamtwo'){	//this is public task
-
-	if(isset($_GET['token'])){
-		$token = $_GET['token'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'token is required in playSecureStream task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	if(isset($_GET['streamurlone'])){
-		$streamUrlOne = $_GET['streamurlone'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'streamurlone is required in playsecurestreamtwo task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	if(isset($_GET['streamurltwo'])){
-		$streamUrlTwo = $_GET['streamurltwo'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'streamurltwo is required in playsecurestreamtwo task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	if(isset($_GET['id'])){
-		$videoId = $_GET['id'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'id is required in playsecurestreamtwo task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	if(isset($_GET['videosize'])){
-		$videoSize = $_GET['videosize'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'videosize is required in playSecureStream task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	
-	matchTokenQuickView($token, $videoSize.$videoId);	//in this task token is matched with videosize and videoId
-	
-	
-	//load the mainClass.php
-	require_once('mainClass.php');
-	$yt = new yt;
-	$playSecureStreamTwo = $yt->playSecureStreamTwo($videoId, $streamUrlOne, $streamUrlTwo);	//if successful script will not come out of it.
-	exit();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-if($task == 'playsecurestream'){	//this is public task
-
-	if(isset($_GET['token'])){
-		$token = $_GET['token'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'token is required in playSecureStream task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	if(isset($_GET['streamurl'])){
-		$streamUrl = $_GET['streamurl'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'streamurl is required in playSecureStream task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	matchToken($token, $streamUrl);
-	
-	
-	if(isset($_GET['downloadvideo'])){
-		$downloadVideo = true;
-	}else{
-		$downloadVideo = false;
-	}
-	
-	if(isset($_GET['filename'])){
-		$fileName = $_GET['filename'];
-	}else{
-		$fileName = false;
-	}
-	
-	if(isset($_GET['extension'])){
-		$extension = $_GET['extension'];
-	}else{
-		$extension = false;
-	}
-	
-	
-	
-	if(isset($_GET['videosize'])){
-		$videoSize = $_GET['videosize'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'videosize is required in playSecureStream task';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-
-	
-	//load the mainClass.php
-	require_once('mainClass.php');
-	$yt = new yt;
-	$playSecureStream = $yt->playSecureStream($videoSize, $streamUrl, $downloadVideo, $fileName, $extension);	//if successful script will not come out of it.
-	exit();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if($task == 'newvideo'){
-	
-	//onlyAuthorizedDomains();	//cannot add authorization as we are calling this task from video.php controller.
-	
-	
-	header('Content-type: application/json');
-	
-	if(isset($_GET['token'])){
-		$token = $_GET['token'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'token is required!';
-		echo json_encode($printJson);
-		exit();
-	}
-
-	
-	if(isset($_GET['videoid'])){
-		$videoId = $_GET['videoid'];
-	}else{
-		$printJson['error'] = true;
-		$printJson['msg'] = 'videoid is required!';
-		echo json_encode($printJson);
-		exit();
-	}
-	
-	matchTokenQuickView($token, $videoId);
-	
-	
-	//load the mainClass.php
-	require_once('mainClass.php');
-	$yt = new yt;
-	
-	$ytStream = $yt->getYtStream($videoId);	//if successful script will not come out of it.
-}
 
 
 //if we are here it means we have provided wrong task
