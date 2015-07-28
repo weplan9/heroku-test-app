@@ -1,5 +1,11 @@
 <?php
 
+echo '<pre>';
+print_r($_ENV);
+echo '</pre>';
+die;
+
+
 define('DS', DIRECTORY_SEPARATOR);
 define('directAccess', TRUE);
 
