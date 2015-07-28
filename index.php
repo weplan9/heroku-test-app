@@ -1,12 +1,5 @@
 <?php
 
-
-
-phpinfo();
-
-exit();
-
-
 define('DS', DIRECTORY_SEPARATOR);
 define('directAccess', TRUE);
 
