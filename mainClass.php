@@ -76,5 +76,18 @@ class yt{
 		exit();
 	}//function convertMp3 ends
 	
+	
+	
+	
+	function base64UrlEncode($data){
+	  return strtr(rtrim(base64_encode($data), '='), '+/', '-_');
+	}
+	
+	function base64UrlDecode($base64){
+	  return base64_decode(strtr($base64, '-_', '+/'));
+	}
+	
+	
+	
 }//main yt class ends here
 ?>
