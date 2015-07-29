@@ -6,22 +6,13 @@ class yt{
 	
 	
 	function convertMp3($streamUrl, $fileName){	//function convertMp3 starts
-	
-		echo 'I am here';
-		die;
+		
+		$streamUrl 	= $this->base64UrlDecode(str_replace('http://', 'https://', $streamUrl));	///make http to https and decode the string
 
-		
-		$streamUrl 	= $this->base64UrlDecode($streamUrl);
-		$streamUrl = str_replace('.ytpak.com', '.googlevideo.com', $streamUrl);
-		
-		$streamUrl = str_replace('http://', 'https://', $streamUrl);	//this is important now google uses https so make sure we use https
-		$streamUrl = str_replace('.c.docs.google.com', '.googlevideo.com', $streamUrl);
-		
-		//I think someone is abusing this loophole in a way that if the download url is changed my script will start to download that url without validating it.
-		//we need to fix this.
+		//validate the URL.
 		$checkUrl = parse_url($streamUrl, PHP_URL_HOST);
-		if(strpos(strtolower($checkUrl), '.googlevideo.com') !== false || strpos(strtolower($checkUrl), '.youtube.com') !== false){	//check if string host not contains .googlevideo.com
-			
+		if(strpos(strtolower($checkUrl), '.googlevideo.com') !== false || '.googleusercontent.com') !== false || strpos(strtolower($checkUrl), '.youtube.com') !== false){
+
 		}else{
 			//alter do not download this!!!! string doesn't contain .googlevideo.com stop
 			header('HTTP/1.0 403 Forbidden he');
@@ -49,6 +40,8 @@ class yt{
 			$max = 600;
 		}
 		
+		echo $streamUrl;
+		die;
 	
 		$finalFile = 'quickview/'.$_ENV['HTTP_X_REQUEST_ID'].'-'.$fileName.$min.$max.'.mp3';
 		
