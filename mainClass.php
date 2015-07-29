@@ -85,6 +85,5 @@ class yt{
 		exit();
 	}//function convertMp3 ends
 	
-
-
+}//main yt class ends here
 ?>
