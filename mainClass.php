@@ -45,6 +45,12 @@ class yt{
 		
 		$filesCache = glob('quickview/*-'.$fileName.$min.$max.'.mp3');
 		
+		echo '<pre>';
+		print_r($filesCache);
+		echo '</pre>';
+		die;
+
+		
 		
 		if (isset($filesCache[0])) {// do not process if file exists already starts
 			$fileToDownload = $filesCache[0];
