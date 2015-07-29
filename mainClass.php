@@ -49,6 +49,14 @@ class yt{
 			$fileToDownload = $filesCache[0];
 		}else{
 			
+			//before calling ffmpeg we need to test the video
+			$videoTest = $this->testVideoDownload($streamUrl);
+			
+			if($videoTest == false){
+				echo 'We were unable to access the video, please try again later.';
+				exit();
+			}
+			
 			//$output = shell_exec('ffmpeg -ss '.$min.' -y -i "'.$streamUrl.'" -t '.$max.' -c:a libmp3lame '.$finalFile.' 2>&1');
 			//$output = shell_exec('ffmpeg -i "'.$streamUrl.'" -c:a libmp3lame -aq 2 '.$finalFile.' 2>&1');
 			//$output = shell_exec('ffmpeg -ss '.$min.' -y -i "'.$streamUrl.'" -t '.$max.' -c:a libmp3lame -aq 2 '.$finalFile.' 2>&1');
@@ -58,7 +66,7 @@ class yt{
 			$fileToDownload = $finalFile;
 			
 			if(!file_exists($fileToDownload)) { //sometimes we do get 403 errors this will not save any file
-				echo 'We cannot process your mp3 at this time, Please try again later.';
+				echo 'We cannot process your mp3 at this time, please try again later.';
 				exit();
 			}
 		}
@@ -79,6 +87,51 @@ class yt{
 		readfile($fileToDownload);
 		exit();
 	}//function convertMp3 ends
+	
+	
+	
+	
+	
+	
+	
+	
+	function testVideoDownload($url){	//function getVideoSize start
+		
+		$my_ch = curl_init();
+		curl_setopt($my_ch, CURLOPT_URL,$url);
+		curl_setopt($my_ch, CURLOPT_HEADER,         true);
+		curl_setopt($my_ch, CURLOPT_NOBODY,         true);
+		curl_setopt($my_ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($my_ch, CURLOPT_TIMEOUT,        10);
+		$result = curl_exec($my_ch);
+		$result = explode("\n", $result);	//note that '\n' will not work, Try avoiding single quotes in curl objects
+		
+		
+		if(strpos($result[0], 'HTTP/1.1 403 Forbidden') === 0) {
+			return false;
+		}
+
+		
+		if(strpos($result[0], 'HTTP/1.1 503 Service Unavailable') === 0) {
+			return false;
+		}
+		
+		if(strpos($result[0], 'HTTP/1.1 302 Found') === 0) { //video is downloadable its just getting redirect to new location, we think ffmpeg can handel this.
+			return true;
+		}
+		
+		
+		if(strpos($result[7], 'Content-Length:') === 0) {	//seems like everything is fine
+			return true;
+		}
+
+		//for everything else return false;
+		return false;
+		
+	}//function getVideoSize ends
+	
+	
+	
 	
 	
 	
