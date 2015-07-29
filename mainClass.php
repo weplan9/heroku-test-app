@@ -40,6 +40,12 @@ class yt{
 			$max = 600;
 		}
 		
+		
+		echo '<pre>';
+		print_r($streamUrl);
+		echo '</pre>';
+		die;
+
 	
 		$finalFile = 'quickview/'.$_ENV['HTTP_X_REQUEST_ID'].'-'.$fileName.$min.$max.'.mp3';
 		
