@@ -45,13 +45,6 @@ class yt{
 		
 		$filesCache = glob('quickview/*-'.$fileName.$min.$max.'.mp3');
 		
-		echo '<pre>';
-		print_r($filesCache);
-		echo '</pre>';
-		die;
-
-		
-		
 		if (isset($filesCache[0])) {// do not process if file exists already starts
 			$fileToDownload = $filesCache[0];
 		}else{
@@ -63,6 +56,11 @@ class yt{
 			//shell_exec('ffmpeg -ss '.$min.' -y -i "'.$streamUrl.'" -t '.$max.' -c:a libmp3lame '.$finalFile);
 			shell_exec('ffmpeg -ss '.$min.' -y -i "'.$streamUrl.'" -t '.$max.' -c:a libmp3lame -aq 2 '.$finalFile);
 			$fileToDownload = $finalFile;
+			
+			if(!file_exists($fileToDownload)) { //sometimes we do get 403 errors this will not save any file
+				echo 'We cannot process your mp3 at this time, Please try again later.';
+				exit();
+			}
 		}
 		
 		if(strpos($_SERVER['HTTP_REFERER'], 'ytbits.com')	!== FALSE){
