@@ -11,8 +11,8 @@ class yt{
 
 		//validate the URL.
 		$checkUrl = parse_url($streamUrl, PHP_URL_HOST);
-		if(strpos(strtolower($checkUrl), '.googlevideo.com') !== false || '.googleusercontent.com') !== false || strpos(strtolower($checkUrl), '.youtube.com') !== false){
-
+		if(strpos(strtolower($checkUrl), '.googlevideo.com') !== false || strpos(strtolower($checkUrl), '.googleusercontent.com') !== false || strpos(strtolower($checkUrl), '.youtube.com') !== false){
+			
 		}else{
 			//alter do not download this!!!! string doesn't contain .googlevideo.com stop
 			header('HTTP/1.0 403 Forbidden he');
@@ -40,8 +40,6 @@ class yt{
 			$max = 600;
 		}
 		
-		echo $streamUrl;
-		die;
 	
 		$finalFile = 'quickview/'.$_ENV['HTTP_X_REQUEST_ID'].'-'.$fileName.$min.$max.'.mp3';
 		
