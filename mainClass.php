@@ -40,10 +40,23 @@ class yt{
 			$max = 600;
 		}
 		
-			
-		$finalFile = 'quickview/'.$_ENV['HTTP_X_REQUEST_ID'].'-'.$fileName.$min.$max.'.mp3';
 		
-		$filesCache = glob('quickview/*-'.$fileName.$min.$max.'.mp3');
+		if(strpos($_SERVER['HTTP_REFERER'], 'ytbits.com')	!== FALSE){
+			
+			
+			$finalFile = 'quickview/'.$_ENV['HTTP_X_REQUEST_ID'].'-'.$fileName.$min.$max.'-YTBits.com.mp3';
+			$filesCache = glob('quickview/*-'.$fileName.$min.$max.'-YTBits.com.mp3');
+			$fileNameToSet = $fileName.'-YTBits.com.mp3';
+
+		}else{
+			
+			$finalFile = 'quickview/'.$_ENV['HTTP_X_REQUEST_ID'].'-'.$fileName.$min.$max.'-YTPak.com.mp3';
+			$filesCache = glob('quickview/*-'.$fileName.$min.$max.'-YTPak.com.mp3');
+			$fileNameToSet = $fileName.'-YTPak.com.mp3';
+		}
+		
+			
+		
 		
 		if (isset($filesCache[0])) {// do not process if file exists already starts
 			$fileToDownload = $filesCache[0];
@@ -71,21 +84,11 @@ class yt{
 			}
 		}
 		
-		if(strpos($_SERVER['HTTP_REFERER'], 'ytbits.com')	!== FALSE){
-			$fileNameToSet = $fileName.'-YTBits.com.mp3';
-		}else{
-			$fileNameToSet = $fileName.'-YTPak.com.mp3';
-		}
-
 		
-		header('Content-Disposition: attachment; filename= "' . $fileNameToSet . '"');
+		header('Location: '.'http://'.$_ENV['HTTP_HOST'].'/'.$finalFile); //do a temporary 302 redirect to the final file.
+		//header('Location: '.'http://'.$_ENV['HTTP_HOST'].'/'.$finalFile, true, 301);  //for 301 Moved Permanently
+		exit;
 		
-		header("Content-Transfer-Encoding: binary");
-		header("Content-Type: audio/mpeg");
-		header('Content-Length: ' . filesize($fileToDownload));
-		
-		readfile($fileToDownload);
-		exit();
 	}//function convertMp3 ends
 	
 	
