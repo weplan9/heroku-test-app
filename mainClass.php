@@ -42,22 +42,61 @@ class yt{
 		
 		
 		
-		
+		//first of all check for cache folder.
 		$fileCacheFolderFind = glob('quickview/*-'.$fileName.$min.$max);
-		$fileCacheFolder = 'quickview/'.$_ENV['HTTP_X_REQUEST_ID'].'-'.$fileName.$min.$max;
+		
+		if (isset($fileCacheFolderFind[0])) {// check if folder already exists
+		
+			$finalFile = $fileCacheFolderFind[0].'/'.$fileName.'-YTPak.com';
+			header('Location: '.'http://'.$_ENV['HTTP_HOST'].'/'.$finalFile); //do a temporary 302 redirect to the final file.
+			//header('Location: '.'http://'.$_ENV['HTTP_HOST'].'/'.$finalFile, true, 301);  //for 301 Moved Permanently
+			exit;
+			
+		}
 		
 		
+		
+		//if we are here it means we dont have the file in cache folder.
+		$fileCacheFolder = 'quickview/'.$_ENV['HTTP_X_REQUEST_ID'].'-'.$fileName.$min.$max.'/';
+		$finalFile = $fileCacheFolder.$fileName.'-YTPak.com';
+		
+		
+		//before calling ffmpeg we need to test the video
+		$videoTest = $this->testVideoDownload($streamUrl);
+		
+		if($videoTest == false){
+			echo 'We were unable to access the video, please try again later.';
+			exit();
+		}
+		
+		//we are now read to call the ffmpeg but first create the folder
 		mkdir($fileCacheFolder);
 		
-		echo '<pre>';
-		print_r($fileCacheFolderFind);
-		echo '</pre>';
-		die;
+		//$output = shell_exec('ffmpeg -ss '.$min.' -y -i "'.$streamUrl.'" -t '.$max.' -c:a libmp3lame '.$finalFile.' 2>&1');
+		//$output = shell_exec('ffmpeg -i "'.$streamUrl.'" -c:a libmp3lame -aq 2 '.$finalFile.' 2>&1');
+		//$output = shell_exec('ffmpeg -ss '.$min.' -y -i "'.$streamUrl.'" -t '.$max.' -c:a libmp3lame -aq 2 '.$finalFile.' 2>&1');
+		
+		//shell_exec('ffmpeg -ss '.$min.' -y -i "'.$streamUrl.'" -t '.$max.' -c:a libmp3lame '.$finalFile);
+		shell_exec('ffmpeg -ss '.$min.' -y -i "'.$streamUrl.'" -t '.$max.' -c:a libmp3lame -aq 2 '.$finalFile);
+		
+		
+		if(!file_exists($finalFile)) { //sometimes we do get 403 errors this will not save any file
+			echo 'We cannot process your mp3 at this time, please try again later.';
+			exit();
+		}
+		
+		header('Location: '.'http://'.$_ENV['HTTP_HOST'].'/'.$finalFile); //do a temporary 302 redirect to the final file.
+		//header('Location: '.'http://'.$_ENV['HTTP_HOST'].'/'.$finalFile, true, 301);  //for 301 Moved Permanently
+		exit;
+		
+		
+		
+
 
 		
 		
 		
-		
+		/*
 		if(strpos($_SERVER['HTTP_REFERER'], 'ytbits.com')	!== FALSE){
 			
 			
@@ -103,6 +142,10 @@ class yt{
 		header('Location: '.'http://'.$_ENV['HTTP_HOST'].'/'.$fileToDownload); //do a temporary 302 redirect to the final file.
 		//header('Location: '.'http://'.$_ENV['HTTP_HOST'].'/'.$finalFile, true, 301);  //for 301 Moved Permanently
 		exit;
+		*/
+		
+		
+		
 		
 	}//function convertMp3 ends
 	
