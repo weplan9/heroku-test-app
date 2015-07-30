@@ -41,13 +41,20 @@ class yt{
 		}
 		
 		
+		//set the host name
+		if(strpos($_SERVER['HTTP_REFERER'], 'ytbits.com')	!== FALSE){
+			$fileNameAndHost = $fileName.'-YTBits.com.mp3';
+		}else{
+			$fileNameAndHost = $fileName.'-YTPak.com.mp3';
+		}
+		
 		
 		//first of all check for cache folder.
 		$fileCacheFolderFind = glob('quickview/*-'.$fileName.$min.$max);
 		
 		if (isset($fileCacheFolderFind[0])) {// check if folder already exists
 		
-			$finalFile = $fileCacheFolderFind[0].'/'.$fileName.'-YTPak.com';
+			$finalFile = $fileCacheFolderFind[0].'/'.$fileNameAndHost;
 			header('Location: '.'http://'.$_ENV['HTTP_HOST'].'/'.$finalFile); //do a temporary 302 redirect to the final file.
 			//header('Location: '.'http://'.$_ENV['HTTP_HOST'].'/'.$finalFile, true, 301);  //for 301 Moved Permanently
 			exit;
@@ -58,7 +65,7 @@ class yt{
 		
 		//if we are here it means we dont have the file in cache folder.
 		$fileCacheFolder = 'quickview/'.$_ENV['HTTP_X_REQUEST_ID'].'-'.$fileName.$min.$max.'/';
-		$finalFile = $fileCacheFolder.$fileName.'-YTPak.com';
+		$finalFile = $fileCacheFolder.fileNameAndHost;
 		
 		
 		//before calling ffmpeg we need to test the video
