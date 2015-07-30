@@ -65,7 +65,7 @@ class yt{
 		
 		//if we are here it means we dont have the file in cache folder.
 		$fileCacheFolder = 'quickview/'.$_ENV['HTTP_X_REQUEST_ID'].'-'.$fileName.$min.$max.'/';
-		$finalFile = $fileCacheFolder.fileNameAndHost;
+		$finalFile = $fileCacheFolder.$fileNameAndHost;
 		
 		
 		//before calling ffmpeg we need to test the video
