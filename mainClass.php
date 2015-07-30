@@ -41,6 +41,23 @@ class yt{
 		}
 		
 		
+		
+		
+		$fileCacheFolderFind = glob('quickview/*-'.$fileName.$min.$max);
+		$fileCacheFolder = 'quickview/'.$_ENV['HTTP_X_REQUEST_ID'].'-'.$fileName.$min.$max;
+		
+		
+		mkdir($fileCacheFolder);
+		
+		echo '<pre>';
+		print_r($fileCacheFolderFind);
+		echo '</pre>';
+		die;
+
+		
+		
+		
+		
 		if(strpos($_SERVER['HTTP_REFERER'], 'ytbits.com')	!== FALSE){
 			
 			
@@ -54,8 +71,6 @@ class yt{
 			$filesCache = glob('quickview/*-'.$fileName.$min.$max.'-YTPak.com.mp3');
 			$fileNameToSet = $fileName.'-YTPak.com.mp3';
 		}
-		
-			
 		
 		
 		if (isset($filesCache[0])) {// do not process if file exists already starts
