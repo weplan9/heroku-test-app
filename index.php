@@ -135,6 +135,49 @@ if($task == 'convertmp3'){	//this is public task
 
 
 
+
+
+
+
+if($task == 'cachevideo'){	//this is public task
+	//only allow onlyAuthorizedDomains to access this task
+	onlyAuthorizedDomains();
+
+	if(isset($_GET['token'])){
+		$token = $_GET['token'];
+	}else{
+		$printJson['error'] = true;
+		$printJson['msg'] = 'token is required in cachevideo task';
+		echo json_encode($printJson);
+		exit();
+	}
+	
+	if(isset($_GET['streamurl'])){
+		$streamUrl = $_GET['streamurl'];
+	}else{
+		$printJson['error'] = true;
+		$printJson['msg'] = 'streamurl is required in cachevideo task';
+		echo json_encode($printJson);
+		exit();
+	}
+	
+	if(isset($_GET['filename'])){
+		$fileName = $_GET['filename'];
+	}else{
+		$fileName = '';
+	}
+	
+	matchToken($token, $streamUrl.$fileName);
+	
+	//load the mainClass.php
+	require_once('mainClass.php');
+	$yt = new yt;
+	$yt->cachevideo($streamUrl, $fileName);
+}
+
+
+
+
 //if we are here it means we have provided wrong task
 onlyAuthorizedCalls();
 header('Content-type: application/json');
