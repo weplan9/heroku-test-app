@@ -216,19 +216,21 @@ class yt{
 		//we are now read to call the ffmpeg but first create the folder
 		mkdir($fileCacheFolder);
 		
+		//file_put_contents($finalFile, file_get_contents($streamUrl));
+		file_put_contents($finalFile, fopen($streamUrl, 'r')); //Since PHP 5.1.0, file_put_contents() supports writing piece-by-piece by passing a stream-handle as the $data parameter
+		
+		/* //curl is not working making mp4 corrupt
 		$ch = curl_init($streamUrl);
 		$fp = fopen($finalFile, 'wb');
-		
 		curl_setopt($ch, CURLOPT_FILE, $fp);
 		curl_setopt($ch, CURLOPT_HEADER,         true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //do not verify peer
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); //do not verify host
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); //follow 302 redirects
-		
 		curl_exec($ch);
 		curl_close($ch);
 		fclose($fp);
-		
+		*/
 		
 		if(!file_exists($finalFile)) { //sometimes we do get 403 errors this will not save any file
 			echo 'We could not process your video at this time, please try again later.';
