@@ -1,9 +1,12 @@
 <?php
 
-//Make sure call is from couldflare!
-if(!isset($_SERVER['HTTP_CF_RAY'])){
-	echo 'Resource cannot be displayed!';
-	exit();
+
+
+if(strpos($_ENV['HTTP_HOST'], '-fc') !== FALSE){ //Make sure call is from couldflare if request is coming from *-fc domain
+	if(!isset($_SERVER['HTTP_CF_RAY'])){
+		echo 'Resource cannot be displayed!';
+		exit();
+	}
 }
 
 

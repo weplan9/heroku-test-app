@@ -237,7 +237,7 @@ class yt{
 			exit();
 		}
 		
-		header('Location: '.'https://'.$_ENV['HTTP_HOST'].'/'.$finalFile); //do a temporary 302 redirect to the final file.
+		header('Location: '.'http://'.$_ENV['HTTP_HOST'].'/'.$finalFile); //do a temporary 302 redirect to the final file.
 		//header('Location: '.'http://'.$_ENV['HTTP_HOST'].'/'.$finalFile, true, 301);  //for 301 Moved Permanently
 		exit;
 	
