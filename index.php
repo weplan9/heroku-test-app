@@ -172,7 +172,7 @@ if($task == 'cachevideo'){	//this is public task
 	//load the mainClass.php
 	require_once('mainClass.php');
 	$yt = new yt;
-	$yt->cachevideo($streamUrl, $fileName);
+	$yt->cacheVideo($streamUrl, $fileName);
 }
 
 
