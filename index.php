@@ -141,7 +141,8 @@ if($task == 'convertmp3'){	//this is public task
 
 if($task == 'cachevideo'){	//this is public task
 	//only allow onlyAuthorizedDomains to access this task
-	onlyAuthorizedDomains();
+	//we need to remove onlyAuthorizedDomains function because we are having issues with https and http referer using iframe.
+	//onlyAuthorizedDomains();
 
 	if(isset($_GET['token'])){
 		$token = $_GET['token'];
