@@ -46,7 +46,7 @@ function matchToken($token, $string){
 
 function onlyAuthorizedDomains(){
 	if(strpos($_SERVER['HTTP_REFERER'], 'ytpak.com') 		!== FALSE)		return true;
-	if(strpos($_SERVER['HTTP_REFERER'], 'ytbits.com') 		!== FALSE)		return true;
+	if(strpos($_SERVER['HTTP_REFERER'], 'ytpak.pk') 		!== FALSE)		return true;
 	
 	header('HTTP/1.0 403 Forbidden ad');
 	exit();
@@ -56,7 +56,7 @@ function onlyAuthorizedDomains(){
 function chekYtpakServer(){
 	//first check if the server is ytpak.com or ytbits not heroku apps domain
 	if(strpos($_SERVER['HTTP_HOST'], 'ytpak.com') 		!== FALSE)		return true;	//server name must be ytpak.com
-	if(strpos($_SERVER['HTTP_HOST'], 'ytbits.com') 		!== FALSE)		return true;	//server name must be ytbits.com
+	if(strpos($_SERVER['HTTP_HOST'], 'ytpak.pk') 		!== FALSE)		return true;	//server name must be ytpak.pk
 	
 	//now check the calling country:
 	//if($_SERVER["HTTP_CF_IPCOUNTRY"] == 'PK') return true;
