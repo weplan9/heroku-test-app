@@ -7,7 +7,7 @@
   
   
   "env": {
-    "BUILDPACK_URL": "https://github.com/weplan9/heroku-buildpack-multi.git",
+    #"BUILDPACK_URL": "https://github.com/weplan9/heroku-buildpack-multi.git",
 	"HEROKU_TOOLBELT_API_EMAIL": "",
 	"HEROKU_TOOLBELT_API_PASSWORD": ""
   },
